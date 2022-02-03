@@ -103,7 +103,7 @@ The algorithm is fairly simple
 
         $\nabla_{\theta_g} \frac{1}{m} \sum_{i=1}^m [log(1 - D(G(z^{(i)})))]$
 
-Something that is not mentioned in the paper up to this point is that they train a regular sample a the same time as they train a generated sample for the discriminator. So any real image is coupled with a generated image? Or is it a simplification dur to the batch? Do they sample elements from $G$ and then train a binary classifier normaly by merging the real and generated data or always give 2 samples at a time? Must the real data and generated data batches have the same length?
+Something that is not mentioned in the paper up to this point is whether they train a regular sample a the same time as they train a generated sample for the discriminator. So any real image is coupled with a generated image? Or is it a simplification due to the batch? Do they sample elements from $G$ and then train a binary classifier normaly by merging the real and generated data or always give 2 samples at a time? Must the real data and generated data batches have the same length?
 
 Theretically, the optimal discriminator is the one that corresponds to $D^*_G(x) = \frac{p_{data}(x)}{p_{data}(x) + p_g(x)}$, which given a sample x, will say it is real if it is more probable to be given by the real data distribution rather than the generator distribution (which makes sense).
 
@@ -113,7 +113,7 @@ https://arxiv.org/abs/1701.07875
 
 ### Summary
 
-The paper generalizes to the problem of unsupervised learning, namely how and what does it mean to learn a distribution? The general answer is that to consider the minimum likelihood approach. Given a parametric dentity family $(P_\theta)_{\theta \in \mathbf{R}^d}$, we want the one that minimizes the likelihood of our data samples $\{x^{(i)}\}_{i=1}^m$: 
+The paper generalizes to the problem of unsupervised learning, namely how and what does it mean to learn a distribution? The general answer is that to consider the minimum likelihood approach. Given a parametric identity family $(P_\theta)_{\theta \in \mathbf{R}^d}$, we want the one that minimizes the likelihood of our data samples $\{x^{(i)}\}_{i=1}^m$: 
 $$\max_{\theta \in \mathbf{R}^d}{ \frac{1}{m} \sum_{i=1}^m log(P_{\theta} (x^{(i)}) )}$$
 Given the real data distribution $\mathbf{P}_r$, this is equivalent to minimizing $KL(\mathbf{P}_r || \mathbf{P}_\theta)$. In practice however, the approximation of $\mathbf{P}_r$ may not exist in the given dimentional space, resulting in a negligeable intersection between $\mathbf{P}_\theta$ and $\mathbf{P}_r$ implying that the KL divergence is not defined.
 RECALL: $$KL(P||Q) = \sum_{x \in \mathcal{X}} P(x) log(\frac{P(x)}{Q(x)})$$
@@ -122,7 +122,7 @@ We thus change the formulation to the following. Let $Z \sim p(z)$ be a random v
 We want to find a good way to estimate how close the estimated and the true distribution are to each other, or in other words, to find a good distance function 
 $\rho (\mathbf{P}_\theta, \mathbf{P}_r)$. A main criteria for $\rho$ is the convergence of the sequence. We say that a sequence of distributions $(\mathbf{P}_t)_{t \in \mathcal{N}}$ converges iff $\exists \ \mathbf{P}_\infty$ such that $\rho (\mathbf{P}_t, \mathbf{P}_\infty) \rarr 0$ and in fact depends on the definition of $\rho$. The definition of $\rho$ implies a tradeoff between the stength of its topology and the ease of convergence (if the convergence criteria is weaker, so is the topology, meaning more function series will converge).
 
-To define our mapping $\theta \rarr \mathbf{P}_\theta$, we need it to be continous (namely $\mathbf{P}_{\theta_t} \rarr \mathbf{P}_{\theta}$ for $\theta_t \rarr \theta$) but this also depends on the distance definition between $\mathbf{P}_{\theta_t}$ and $\mathbf{P}_\theta$. -by assuming $\mathbf{P}_\theta$ is continuous, we can say that with a continuous $\rho$ we have a continuous loss function $\theta \rarr \rho (\mathbf{P}_\theta, \mathbf{P}_\infty)$.
+To define our mapping $\theta \rarr \mathbf{P}_\theta$, we need it to be continous (namely $\mathbf{P}_{\theta_t} \rarr \mathbf{P}_{\theta}$ for $\theta_t \rarr \theta$) but this also depends on the distance definition between $\mathbf{P}_{\theta_t}$ and $\mathbf{P}_\theta$. By assuming $\mathbf{P}_\theta$ is continuous, we can say that with a continuous $\rho$ we have a continuous loss function $\theta \rarr \rho (\mathbf{P}_\theta, \mathbf{P}_\infty)$.
 
 ### Distances
 
@@ -188,8 +188,35 @@ https://arxiv.org/pdf/1511.06434.pdf
 
 ### Summary
 
+They present the so-called DCGANs (Deep Convolutional Generative Adversarial Networks) architecture.
+
+#### Stability
+
+There were problems with stability with CNNs when using GANs. In the paper they say that the following cope with this problem:
+- replace pooling layers with *strided convolutions* for the discriminator and with *fractional-strided convolutions* for the generator. -> Need to check this out
+- Use batch norm (0 mean & unit variance)
+- Remove Fully connected layers 
+- For the generator: use ReLU for all layers on except for the last, where should use Tanh
+- For the discriminator: use the LeakyReLU for all layers
+
+#### Preprocessing, Hyperparamters and Optimizer
+
+- No preprocessing except mapping images into [-1, 1]
+- batches of 128
+- weights init with 0 mean, 0.02 std
+- slope of LeakyReLU: 0.2
+- optimizer: Adam
+- learning rate: 0.0002
+- momentum $\beta_1$: 0.5
+
+## Deconvolution Layer
+
+The ````Conv2DTranspose``` keras layer 
+
 ## Ideas
 
 What if we train the generator to have a regularization loss over an input and output to make it *modify* real images?
 
 Is there a way to determine, going through the network reversely, whether a sample is actally part of the distribution or not, given $x$: $P(z | G(z) = x)$ for $z$ part of the noise?
+
+Since the deconvolution is the inverse of a convolution, can we run the generator backward to see the initial seed or can we run the discriminator backward to see what it would output?
