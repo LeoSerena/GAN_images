@@ -1,0 +1,21 @@
+2022-02-04 08:22:21,854 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:12:43,801 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:13:07,964 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:13:08,279 - gan_images.gan.gan - INFO - training in simultaneous mode
+2022-02-04 09:15:23,963 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:15:24,280 - gan_images.gan.gan - INFO - training in simultaneous mode
+2022-02-04 09:16:32,914 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:16:33,232 - gan_images.gan.gan - INFO - training in simultaneous mode
+2022-02-04 09:17:15,229 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:17:15,544 - gan_images.gan.gan - INFO - training in simultaneous mode
+2022-02-04 09:42:36,291 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:42:36,758 - gan_images.gan.gan - INFO - training in alternating mode
+2022-02-04 09:42:59,499 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:42:59,804 - gan_images.gan.gan - INFO - training in alternate mode
+2022-02-04 09:43:00,626 - gan_images.gan.gan - INFO - training discriminator
+2022-02-04 09:43:57,212 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:43:57,527 - gan_images.gan.gan - INFO - training in alternate mode
+2022-02-04 09:43:58,311 - gan_images.gan.gan - INFO - training discriminator
+2022-02-04 09:46:23,385 - gan_images.gan.gan - INFO - instantiated GAN object
+2022-02-04 09:46:23,711 - gan_images.gan.gan - INFO - training in alternate mode
+2022-02-04 09:46:23,712 - gan_images.gan.gan - INFO - training discriminator
