@@ -209,9 +209,11 @@ There were problems with stability with CNNs when using GANs. In the paper they 
 - learning rate: 0.0002
 - momentum $\beta_1$: 0.5
 
-## Deconvolution Layer
+## NIPS 2016 Tutorial: Generative Adversarial Networks
 
-The ````Conv2DTranspose``` keras layer 
+Instead of seeing the GAN problem as an optimization problem, it is better to see it as a *2 player game*. This means that we have 2 optimization functions $J^{D}(\bold \theta_D, \bold \theta_G)$ where $D$ is the discriminator function and can only control $\theta_D$ and $J^{G}(\bold \theta_D, \bold \theta_G)$ where $G$ is the Generator function and can only control $\theta_G$.
+
+In this setup, the equilibrium point is refered as the *Nash equilibrium*, which the tuple $(\theta_D, \theta_G)$ minimizing $J^{D}$ wrt $\theta_D$ as well as $J^{G}$ wrt $\theta_G$. $G$ is a function that given a sample $z$ sampled from a prior disctribution will return a sample $\bold x$ drawn from $p_{model}$ (I think they meant drawn from the support of the distribution).
 
 ## Ideas
 

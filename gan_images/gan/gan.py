@@ -4,8 +4,10 @@ import time
 import sys
 import logging
 
+import matplotlib.pyplot as plt
 import tensorflow as tf
 
+from gan_images.utils import make_dir_if_not_exists
 from gan_images.models.discriminator import init_discriminator, d_loss
 from gan_images.models.generator import init_generator, g_loss
 
@@ -23,40 +25,52 @@ class GAN():
 
         self.G_optim = tf.keras.optimizers.Adam(G_lr)
         self.D_optim = tf.keras.optimizers.Adam(D_lr)
+        self.checkpoint = tf.train.Checkpoint(
+            generator_optimizer = self.G_optim,
+            discriminator_optimizer = self.D_optim,
+            generator = self.G,
+            discriminator = self.G
+        )
+        self.checkpoint_dir = './training_checkpoints'
+        make_dir_if_not_exists(self.checkpoint_dir)
+        self.examples_images_dir = './training_images'
+        make_dir_if_not_exists(self.examples_images_dir)
 
     def save_checkpoints(self):
-        checkpoint_dir = './training_checkpoints'
-        checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt")
-        checkpoint = tf.train.Checkpoint(
-            generator_optimizer = self.generator_optimizer,
-            discriminator_optimizer = self.discriminator_optimizer,
-            generator = self.generator,
-            discriminator = self.discriminator
-        )
+        checkpoint_prefix= os.path.join(self.checkpoint_dir, "ckpt")
+        self.checkpoint.save(checkpoint_prefix)
 
     def train(
         self, 
         data : tf.data.Dataset, 
         num_epochs : int = 50, 
-        mode : str = 'simultaneous'
+        mode : str = 'simultaneous',
+        batch_size : int = 64,
+        min_acc : float = 0.8,
+        noise_dim : int = 100,
+        num_examples_to_generate : int = 16
     ):
-        self.noise_dim = 100
+        self.noise_dim = noise_dim
 
         for epoch in range(num_epochs):
             # ---------------------
             start = time.time()
-            print(f'epoch {epoch}')
+            logger.info(f'epoch {epoch}')
             
             logger.info(f'training in {mode} mode')
             if mode == 'alternate':
-                self.train_D(data, batch_size = 64, max_epochs = 5, min_acc = 0.8)
-                self.train_G(batch_size = 64)
+                self.train_D(data, batch_size = batch_size, max_epochs = 5, min_acc = min_acc)
+                self.train_G(batch_size = batch_size)
             elif mode == 'simultaneous':
                 self.simultanous_training(data)
             else:
-                sys.exit('wrong mode argument')
+                logger.error("wrong  mode argument, can either be 'simultaneous' or 'alternate'")
+                sys.exit()
 
-            print(f"End of epoch {epoch}: {time.time() - start} seconds")
+            self.save_checkpoints()
+            inputs = tf.random.normal([num_examples_to_generate, self.noise_dim])
+            self.generate_and_save_images(inputs)
+            logger.info(f"End of epoch {epoch}: {time.time() - start} seconds")
             # ---------------------
 
     def train_D(self, data, batch_size, max_epochs, min_acc):
@@ -125,3 +139,20 @@ class GAN():
 
             self.G_optim.apply_gradients(zip(G_gradients, self.G.trainable_variables))
             self.D_optim.apply_gradients(zip(D_gradients, self.D.trainable_variables))
+
+
+    def generate_and_save_images(self, epoch, test_input):
+        predictions = self.G(test_input, training=False)
+
+        fig = plt.figure(figsize=(4, 4))
+
+        for i in range(predictions.shape[0]):
+            plt.subplot(4, 4, i+1)
+            plt.imshow(predictions[i, :, :, 0])
+            plt.axis('off')
+
+        plt.savefig(
+            os.path.join(
+                self.examples_images_dir,
+                'images_at_epoch_{:04d}.png'.format(epoch))
+        )

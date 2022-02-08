@@ -1,0 +1,16 @@
+# python cache
+__pycache__
+
+# python egg metadata
+*.egg-info
+*.egg
+
+# vscode
+.vscode
+
+# unziped data
+gan_images/data/thumbnails128x128
+gan_images/data/*.zip
+
+# notebooks metadata
+*/.ipynb_checkpoints

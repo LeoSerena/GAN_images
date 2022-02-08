@@ -70,6 +70,7 @@ def init_generator(
 
     # The BatchNormalization layer keeps the mean close to 0 and the std to 1 for the output.
     # While training (i.e. using fit()), it will normalize on every batch gamma * ((B - mean(B) / sqrt(variance(B) + eps) + beta)
+    # Need to look more deep into Virtual Batch Normalization
     model.add(K.layers.BatchNormalization())
     model.add(K.layers.LeakyReLU(alpha = 0.3))
     model.add(K.layers.Reshape((shape_one[0], shape_one[1], D)))
