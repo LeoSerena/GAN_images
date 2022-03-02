@@ -14,14 +14,16 @@ from gan_images.models.generator import init_generator, g_loss
 logger = logging.getLogger(__name__)
 
 class GAN():
-    def __init__(self):
+    def __init__(
+        self,
+        I = (128, 128, 3)
+    ):
         logger.info('instantiated GAN object')
-        I = (128, 128)
         G_lr = 1e-4
         D_lr = 1e-4
 
-        self.G = init_generator(image_shape = I)
-        self.D = init_discriminator(image_shape = I)
+        self.G = init_generator(image_shape = (I[0], I[1]), num_channels = I[2])
+        self.D = init_discriminator(image_shape = I[0], I[1], num_channels = I[2])
 
         self.G_optim = tf.keras.optimizers.Adam(G_lr)
         self.D_optim = tf.keras.optimizers.Adam(D_lr)

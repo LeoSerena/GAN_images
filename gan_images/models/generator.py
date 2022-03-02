@@ -46,7 +46,8 @@ def init_conv2D_transpose(filter_dim, D, strides, activation = None):
 def init_generator(
     image_shape = (28, 28), 
     D = 256,
-    filter_dim = 5
+    filter_dim = 5,
+    num_channels = 3
 ):
     """[summary]
 
@@ -56,6 +57,8 @@ def init_generator(
     :type D: int, optional
     :param filter_dim: [description], defaults to 5
     :type filter_dim: int, optional
+    :param num_channels: number of image channels to generate (3 for RGB), defaults to 3
+    :type num_channels: int, optional 
     :return: [description]
     :rtype: [type]
     """
@@ -83,7 +86,7 @@ def init_generator(
     model.add(K.layers.BatchNormalization())
     model.add(K.layers.LeakyReLU(alpha = 0.3))
 
-    model.add(init_conv2D_transpose(filter_dim=filter_dim, D = 3, strides = (2,2), activation = 'tanh'))
+    model.add(init_conv2D_transpose(filter_dim=filter_dim, D = num_channels, strides = (2,2), activation = 'tanh'))
 
     return model
 
