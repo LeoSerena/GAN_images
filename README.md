@@ -215,6 +215,10 @@ Instead of seeing the GAN problem as an optimization problem, it is better to se
 
 In this setup, the equilibrium point is refered as the *Nash equilibrium*, which the tuple $(\theta_D, \theta_G)$ minimizing $J^{D}$ wrt $\theta_D$ as well as $J^{G}$ wrt $\theta_G$. $G$ is a function that given a sample $z$ sampled from a prior disctribution will return a sample $\bold x$ drawn from $p_{model}$ (I think they meant drawn from the support of the distribution).
 
+## Dataset 
+
+https://www.kaggle.com/greatgamedota/ffhq-face-data-set
+
 ## Ideas
 
 What if we train the generator to have a regularization loss over an input and output to make it *modify* real images?
@@ -222,3 +226,4 @@ What if we train the generator to have a regularization loss over an input and o
 Is there a way to determine, going through the network reversely, whether a sample is actally part of the distribution or not, given $x$: $P(z | G(z) = x)$ for $z$ part of the noise?
 
 Since the deconvolution is the inverse of a convolution, can we run the generator backward to see the initial seed or can we run the discriminator backward to see what it would output?
+

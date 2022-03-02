@@ -11,7 +11,7 @@ def init_conv2D(image_shape, D, filter_dim, strides, num_channels):
     )
 
 def init_discriminator(
-    image_shape = (28, 28),
+    image_shape = (128, 128),
     D = 256,
     filter_dim = (5,5),
     num_channels = 3

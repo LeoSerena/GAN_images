@@ -8,7 +8,8 @@ def load_real_samples(
     path : str = "../gan_images/data/thumbnails128x128",
     IMAGE_SIZE : int = 128,
     SEED : int = 32,
-    batch_size : int = 64
+    batch_size : int = 64,
+    color_mode = "rgb"
 ):
     path = pathlib.Path(path)
     AUTOTUNE = tf.data.AUTOTUNE
@@ -18,6 +19,7 @@ def load_real_samples(
         labels = None,
         validation_split = 0,
         seed = SEED,
+        color_mode = color_mode,
         batch_size = batch_size,
         image_size = (IMAGE_SIZE, IMAGE_SIZE)
     # the cache method keeps the dataset in memory after the first epoch to improve I/O costs
@@ -47,12 +49,12 @@ def data_augment(SEED):
         K.layers.RandomFlip(mode = 'vertical', seed = SEED)
     ])
 
-
 def data_preprocessing(
     IMAGES_SIZE : int = 128,
     SEED : int = 32
-):
+    ):
     return K.Sequential([
         init_rescale_image(IMAGES_SIZE),
         data_augment(SEED)
     ])
+
